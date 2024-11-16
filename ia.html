@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    <!-- Incluyendo Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .btn-action {
+            color: white;
+            font-size: 14px;
+            border-radius: 50px;
+            padding: 10px 20px;
+            margin-left: 5px;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .btn-agregar {
+            background-color: #28a745;
+        }
+        .btn-agregar:hover {
+            background-color: #218838;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .btn-eliminar {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .btn-eliminar:hover {
+            background-color: #c82333;
+        }
+        #contenido {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h4 {
+            color: #007bff;
+        }
+    </style>
+    <!-- Incluyendo jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let currentSection = null;
+
+            // Cambiar de sección
+            $('#btnPersonal').click(function () {
+                currentSection = 'personal';
+                renderSection('Información Personal', 'personal', [
+                    'Nombre: Juan Pérez',
+                    'Edad: 30 años',
+                    'Correo: juan.perez@email.com'
+                ]);
+            });
+
+            $('#btnEstudios').click(function () {
+                currentSection = 'estudios';
+                renderSection('Estudios', 'estudios', [
+                    'Licenciatura en Informática',
+                    'Curso avanzado en Desarrollo Web'
+                ]);
+            });
+
+            $('#btnExperiencia').click(function () {
+                currentSection = 'experiencia';
+                renderSection('Experiencia', 'experiencia', [
+                    'Desarrollador Web en Empresa X (3 años)',
+                    'Analista de Sistemas en Empresa Y (2 años)'
+                ]);
+            });
+
+            $('#btnReferencias').click(function () {
+                currentSection = 'referencias';
+                renderSection('Referencias', 'referencias', [
+                    'María López (Gerente en Empresa X)',
+                    'Carlos García (Profesor en Universidad Z)'
+                ]);
+            });
+
+            function renderSection(title, sectionId, items) {
+                const listItems = items.map((item, index) => `
+                    <li class="d-flex align-items-center">
+                        ${item}
+                        <button class="btn-eliminar" data-index="${index}">❌</button>
+                    </li>`).join('');
+                $('#contenido').html(`
+                    <h4>${title}</h4>
+                    <ul id="${sectionId}-list">${listItems}</ul>
+                    <div class="input-group mb-3">
+                        <input type="text" id="new-info" class="form-control" placeholder="Nueva información">
+                        <div class="input-group-append">
+                            <button class="btn btn-agregar btn-action" id="btnAgregar">
+                                <span>➕</span> Agregar
+                            </button>
+                        </div>
+                    </div>
+                `);
+                addHandlers(sectionId);
+            }
+
+            function addHandlers(sectionId) {
+                // Agregar nueva información
+                $('#btnAgregar').click(function () {
+                    const newInfo = $('#new-info').val();
+                    if (newInfo) {
+                        $(`#${sectionId}-list`).append(`
+                            <li class="d-flex align-items-center">
+                                ${newInfo}
+                                <button class="btn-eliminar">❌</button>
+                            </li>
+                        `);
+                        $('#new-info').val('');
+                        attachDeleteHandlers();
+                    } else {
+                        alert('Por favor, escribe algo para agregar.');
+                    }
+                });
+
+                // Eliminar un elemento específico
+                attachDeleteHandlers();
+            }
+
+            function attachDeleteHandlers() {
+                $('.btn-eliminar').off('click').on('click', function () {
+                    $(this).parent().remove();
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1 class="mb-4">Mi Perfil</h1>
+        <div class="btn-group mb-4" role="group">
+            <button class="btn btn-custom" id="btnPersonal">Información Personal</button>
+            <button class="btn btn-custom" id="btnEstudios">Estudios</button>
+            <button class="btn btn-custom" id="btnExperiencia">Experiencia</button>
+            <button class="btn btn-custom" id="btnReferencias">Referencias</button>
+        </div>
+        <div id="contenido" class="alert alert-light border" role="alert">
+            Haz clic en los botones para ver más información.
+        </div>
+    </div>
+
+    <!-- Incluyendo los scripts de Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
